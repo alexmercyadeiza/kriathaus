@@ -54,7 +54,7 @@ export default function ParticleBackground() {
     const colors = new Float32Array(PARTICLE_COUNT * 3)
     const opacities = new Float32Array(PARTICLE_COUNT)
 
-    // Logo exclusion zone — tight box around the logo
+    // Logo exclusion zone: tight box around the logo
     const exW = 85 // half-width of exclusion rect
     const exH = 18 // half-height of exclusion rect
 
@@ -103,7 +103,7 @@ export default function ParticleBackground() {
         // Ring appears first
         birthFrame[i] = Math.random() * 60
       } else {
-        // === Scattered field — fills the whole page ===
+        // === Scattered field: fills the whole page ===
         // Place randomly across the full visible area, outside the ring
         do {
           x = (Math.random() - 0.5) * visW * 0.95
@@ -137,7 +137,7 @@ export default function ParticleBackground() {
       velocities[i3 + 2] = (Math.random() - 0.5) * 0.01
     }
 
-    // Fade multiplier — written per frame based on birth time
+    // Fade multiplier: written per frame based on birth time
     const fadeMult = new Float32Array(PARTICLE_COUNT)
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
@@ -257,7 +257,7 @@ export default function ParticleBackground() {
           y += (y > 0 ? 1 : -1) * 1.5
         }
 
-        // Soft boundary — allow particles up to viewport edges
+        // Soft boundary: allow particles up to viewport edges
         const bx = visW * 0.52
         const by = visH * 0.52
         if (Math.abs(x) > bx) x *= 0.97

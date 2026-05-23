@@ -9,38 +9,98 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WorkRouteImport } from './routes/work'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WorkSlugRouteImport } from './routes/work_.$slug'
+import { Route as ResourcesSlugRouteImport } from './routes/resources.$slug'
 
+const WorkRoute = WorkRouteImport.update({
+  id: '/work',
+  path: '/work',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkSlugRoute = WorkSlugRouteImport.update({
+  id: '/work_/$slug',
+  path: '/work/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesSlugRoute = ResourcesSlugRouteImport.update({
+  id: '/resources/$slug',
+  path: '/resources/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/work': typeof WorkRoute
+  '/resources/$slug': typeof ResourcesSlugRoute
+  '/work/$slug': typeof WorkSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/work': typeof WorkRoute
+  '/resources/$slug': typeof ResourcesSlugRoute
+  '/work/$slug': typeof WorkSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/work': typeof WorkRoute
+  '/resources/$slug': typeof ResourcesSlugRoute
+  '/work_/$slug': typeof WorkSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/contact' | '/work' | '/resources/$slug' | '/work/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/contact' | '/work' | '/resources/$slug' | '/work/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/contact'
+    | '/work'
+    | '/resources/$slug'
+    | '/work_/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContactRoute: typeof ContactRoute
+  WorkRoute: typeof WorkRoute
+  ResourcesSlugRoute: typeof ResourcesSlugRoute
+  WorkSlugRoute: typeof WorkSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/work': {
+      id: '/work'
+      path: '/work'
+      fullPath: '/work'
+      preLoaderRoute: typeof WorkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +108,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/work_/$slug': {
+      id: '/work_/$slug'
+      path: '/work/$slug'
+      fullPath: '/work/$slug'
+      preLoaderRoute: typeof WorkSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources/$slug': {
+      id: '/resources/$slug'
+      path: '/resources/$slug'
+      fullPath: '/resources/$slug'
+      preLoaderRoute: typeof ResourcesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContactRoute: ContactRoute,
+  WorkRoute: WorkRoute,
+  ResourcesSlugRoute: ResourcesSlugRoute,
+  WorkSlugRoute: WorkSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

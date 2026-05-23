@@ -1,22 +1,211 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap");
 
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html,
 body,
 #app {
   width: 100%;
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: #000;
   color: #fff;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: "Figtree", system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .kh-reveal { opacity: 1 !important; transform: none !important; }
+  .kh-arrow { animation: none !important; }
+}
+
+/* Section reveal animation */
+.kh-reveal {
+  opacity: 0;
+  transform: translateY(48px);
+  transition:
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.kh-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.kh-reveal-d1 { transition-delay: 80ms; }
+.kh-reveal-d2 { transition-delay: 180ms; }
+.kh-reveal-d3 { transition-delay: 280ms; }
+.kh-reveal-d4 { transition-delay: 380ms; }
+
+/* Bouncing down arrow */
+@keyframes kh-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+.kh-arrow {
+  animation: kh-bounce 1.6s ease-in-out infinite;
+}
+
+/* Nav link underline slide-in */
+.kh-nav-link {
+  position: relative;
+  cursor: pointer;
+}
+.kh-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 2px;
+  width: 100%;
+  background: #ffffff;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.kh-nav-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* Project cards: lift + image zoom on hover */
+.kh-project {
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.kh-project-media {
+  transition: transform 1100ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.kh-project:hover {
+  transform: translateY(-8px);
+}
+.kh-project:hover .kh-project-media {
+  transform: scale(1.05);
+}
+
+/* Hitech illustration parent (inside the card): add a soft lift */
+.kh-hitech-wrap {
+  transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.kh-project:hover .kh-hitech-wrap {
+  transform: translateY(-4px) scale(1.02);
+}
+
+/* Outlined "See more work" button */
+.kh-cta-outline {
+  transition:
+    background-color 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+}
+.kh-cta-outline:hover {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* Dark CTA button (Get In Touch) */
+.kh-cta-dark {
+  transition:
+    transform 400ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+}
+.kh-cta-dark:hover {
+  transform: scale(1.04);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
+}
+
+/* Off-screen containment for heavy sections */
+.kh-contain {
+  content-visibility: auto;
+  contain-intrinsic-size: 1440px 600px;
+}
+
+/* Subtle float drift on the floating icons in the CTA card */
+@keyframes kh-float-a {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(-3deg); }
+}
+@keyframes kh-float-b {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(4deg); }
+}
+@keyframes kh-float-c {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(-2deg); }
+}
+.kh-float-a { animation: kh-float-a 4.2s ease-in-out infinite; }
+.kh-float-b { animation: kh-float-b 5.1s ease-in-out infinite; }
+.kh-float-c { animation: kh-float-c 4.6s ease-in-out infinite; }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Splash intro: KRIAT HAUS wordmark on white, then the dot under the second
+   A zooms out until it fills the screen, transitioning into the black UI.
+   Total timeline: 2000ms hold → 2200ms zoom (overlapping a 600ms fade).
+   ───────────────────────────────────────────────────────────────────────── */
+.kh-splash {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: 100;
+  overflow: hidden;
+  pointer-events: none;
+  animation: kh-splash-hand-off 200ms ease-out 4200ms forwards;
+}
+
+.kh-splash-stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(820px, 62vw);
+  aspect-ratio: 1320 / 158;
+}
+
+.kh-splash-wordmark {
+  display: block;
+  width: 100%;
+  height: 100%;
+  animation: kh-splash-wordmark-fade 700ms cubic-bezier(0.6, 0, 0.4, 1) 2000ms forwards;
+}
+
+.kh-splash-square {
+  position: absolute;
+  background: #000;
+  transform-origin: center center;
+  /* Slight rounding stays imperceptible at small size, hides aliasing while scaling. */
+  will-change: transform;
+  animation: kh-splash-square-zoom 2200ms cubic-bezier(0.76, 0, 0.24, 1) 2000ms forwards;
+}
+
+@keyframes kh-splash-wordmark-fade {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes kh-splash-square-zoom {
+  0%   { transform: scale(1); }
+  /* A generous final scale so the square overshoots viewport at any size. */
+  100% { transform: scale(280); }
+}
+
+@keyframes kh-splash-hand-off {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kh-splash { display: none; }
 }
