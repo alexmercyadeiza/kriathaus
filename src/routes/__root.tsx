@@ -5,50 +5,16 @@ import appCss from '../styles.css?url'
 export const Route = createRootRoute({
   head: () => ({
     meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      {
-        title: 'Kriathaus - Design and Engineering Studio',
-      },
+      { charSet: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { name: 'theme-color', content: '#000000' },
+      { property: 'og:site_name', content: 'Kriat Haus' },
+      { property: 'og:type', content: 'website' },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { title: 'Kriat Haus' },
       {
         name: 'description',
-        content:
-          'Kriathaus - A design and engineering studio building digital products.',
-      },
-      {
-        name: 'theme-color',
-        content: '#000000',
-      },
-      {
-        property: 'og:title',
-        content: 'Kriathaus - Design and Engineering Studio',
-      },
-      {
-        property: 'og:description',
-        content:
-          'Kriathaus - A design and engineering studio building digital products.',
-      },
-      {
-        property: 'og:type',
-        content: 'website',
-      },
-      {
-        name: 'twitter:card',
-        content: 'summary',
-      },
-      {
-        name: 'twitter:title',
-        content: 'Kriathaus - Design and Engineering Studio',
-      },
-      {
-        name: 'twitter:description',
-        content:
-          'Kriathaus - A design and engineering studio building digital products.',
+        content: 'A creative studio designing brands, websites, and digital products for ambitious teams.',
       },
     ],
     links: [

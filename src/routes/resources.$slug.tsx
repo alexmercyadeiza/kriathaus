@@ -14,6 +14,33 @@ export const Route = createFileRoute('/resources/$slug')({
     if (!post) throw notFound()
     return { post }
   },
+  head: ({ loaderData }) => {
+    const post = loaderData?.post
+    if (!post) {
+      return {
+        meta: [
+          { title: 'Resource not found | Kriat Haus' },
+          {
+            name: 'description',
+            content: 'The resource you were looking for is not in our library.',
+          },
+        ],
+      }
+    }
+    const title = `${post.title} | Kriat Haus`
+    const description = post.lead
+    return {
+      meta: [
+        { title },
+        { name: 'description', content: description },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: description },
+        { property: 'og:type', content: 'article' },
+        { name: 'twitter:title', content: title },
+        { name: 'twitter:description', content: description },
+      ],
+    }
+  },
   notFoundComponent: ResourceNotFound,
 })
 

@@ -2,13 +2,28 @@ import { useRef } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
-import { HitechIllustration } from '../components/HitechIllustration'
 import { ProjectCard } from '../components/ProjectCard'
 import { PROJECT_DESC } from '../components/project-data'
 import { WorkFilterBar } from '../components/WorkFilterBar'
 import { useReveals } from '../lib/useReveals'
 
-export const Route = createFileRoute('/work')({ component: WorkPage })
+const WORK_TITLE = 'Work | Kriat Haus'
+const WORK_DESCRIPTION =
+  'Selected work across brand identity, web, and product. Featuring Aurum.'
+
+export const Route = createFileRoute('/work')({
+  component: WorkPage,
+  head: () => ({
+    meta: [
+      { title: WORK_TITLE },
+      { name: 'description', content: WORK_DESCRIPTION },
+      { property: 'og:title', content: WORK_TITLE },
+      { property: 'og:description', content: WORK_DESCRIPTION },
+      { name: 'twitter:title', content: WORK_TITLE },
+      { name: 'twitter:description', content: WORK_DESCRIPTION },
+    ],
+  }),
+})
 
 const WORK_CARD_HEIGHT = 569
 
@@ -22,7 +37,7 @@ function WorkPage() {
         className="relative"
         style={{
           width: '1440px',
-          height: '2998px',
+          height: '1632px',
           zoom: 'var(--kh-k, 1)',
         }}
       >
@@ -36,73 +51,21 @@ function WorkPage() {
         {/* Project grid — two columns × two rows, uniform card heights */}
         <div className="absolute left-1/2 top-[489px] grid w-[1320px] -translate-x-1/2 grid-cols-2 gap-x-[40px] gap-y-[40px]">
           <ProjectCard
-            slug="hitech"
-            title="Hitech Electro Mechanical"
-            description={PROJECT_DESC.hitech}
-            bgClass="bg-[#1da8fc]"
+            slug="aurum"
+            title="Aurum"
+            description={PROJECT_DESC.aurum}
             height={WORK_CARD_HEIGHT}
-          >
-            <div className="kh-hitech-wrap size-full">
-              <HitechIllustration />
-            </div>
-          </ProjectCard>
-
-          <ProjectCard
-            slug="mulla"
-            title="Mulla"
-            description={PROJECT_DESC.mulla}
-            height={WORK_CARD_HEIGHT}
-            revealDelay={1}
           >
             <img
-              alt="Mulla"
-              src="/figma/mulla.png"
+              alt="Aurum"
+              src="/projects/aurum/presentation8.jpg"
               className="kh-project-media absolute inset-0 size-full object-cover object-center"
               decoding="async"
             />
           </ProjectCard>
-
-          <ProjectCard
-            slug="onecity"
-            title="One City Church"
-            description={PROJECT_DESC.onecity}
-            height={WORK_CARD_HEIGHT}
-            revealDelay={2}
-          >
-            <img
-              alt="One City Church"
-              src="/figma/one-city-church.png"
-              className="kh-project-media absolute inset-0 size-full object-cover object-center"
-              decoding="async"
-            />
-          </ProjectCard>
-
-          <ProjectCard
-            slug="kudimata"
-            title="Kudimata"
-            description={PROJECT_DESC.kudimata}
-            height={WORK_CARD_HEIGHT}
-            revealDelay={3}
-          >
-            <img
-              alt="Kudimata"
-              src="/figma/kudimata.png"
-              className="kh-project-media absolute inset-0 size-full object-cover object-center"
-              decoding="async"
-            />
-          </ProjectCard>
-
-          <ProjectCard
-            slug="sofa"
-            title="Sofa Doors"
-            description={PROJECT_DESC.sofa}
-            bgClass="bg-[#6b4a36]"
-            height={WORK_CARD_HEIGHT}
-            revealDelay={4}
-          />
         </div>
 
-        <Footer top={2675} />
+        <Footer top={1309} />
       </div>
     </div>
   )

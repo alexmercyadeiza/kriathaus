@@ -2,7 +2,11 @@ import { useRef } from 'react'
 import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
-import { getNextProject, getProjectBySlug } from '../components/project-data'
+import {
+  PROJECTS,
+  getNextProject,
+  getProjectBySlug,
+} from '../components/project-data'
 import type { ProjectMediaBlock } from '../components/project-data'
 import { useReveals } from '../lib/useReveals'
 
@@ -12,6 +16,33 @@ export const Route = createFileRoute('/work_/$slug')({
     const project = getProjectBySlug(params.slug)
     if (!project) throw notFound()
     return { project, next: getNextProject(params.slug) }
+  },
+  head: ({ loaderData }) => {
+    const project = loaderData?.project
+    if (!project) {
+      return {
+        meta: [
+          { title: 'Project not found | Kriat Haus' },
+          {
+            name: 'description',
+            content: 'The project you were looking for is not in our portfolio.',
+          },
+        ],
+      }
+    }
+    const title = `${project.title} | Kriat Haus`
+    const description = project.shortDescription
+    return {
+      meta: [
+        { title },
+        { name: 'description', content: description },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: description },
+        { property: 'og:type', content: 'article' },
+        { name: 'twitter:title', content: title },
+        { name: 'twitter:description', content: description },
+      ],
+    }
   },
   notFoundComponent: ProjectNotFound,
 })
@@ -84,37 +115,39 @@ function ProjectDetailPage() {
         </div>
 
         {/* Next project teaser */}
-        <section className="kh-reveal mx-auto mt-[200px] w-[1320px] border-t border-white/15 pt-[60px]">
-          <p className="text-[14px] uppercase tracking-[0.22em] text-white/50">
-            Next project
-          </p>
-          <Link
-            to="/work/$slug"
-            params={{ slug: next.slug }}
-            className="group mt-[28px] flex items-end justify-between gap-[40px] no-underline"
-          >
-            <div className="flex-1">
-              <h2 className="text-[72px] font-medium leading-[1] tracking-[-0.02em] text-white">
-                {next.title}
-              </h2>
-              <p className="mt-[24px] max-w-[620px] text-[18px] font-light leading-[1.5] text-white/60">
-                {next.shortDescription}
-              </p>
-            </div>
-            <div
-              className={`relative h-[260px] w-[420px] flex-none overflow-hidden rounded-[10px] ${next.cover.bg ?? 'bg-white/5'}`}
+        {PROJECTS.length > 1 && (
+          <section className="kh-reveal mx-auto mt-[200px] w-[1320px] border-t border-white/15 pt-[60px]">
+            <p className="text-[14px] uppercase tracking-[0.22em] text-white/50">
+              Next project
+            </p>
+            <Link
+              to="/work/$slug"
+              params={{ slug: next.slug }}
+              className="group mt-[28px] flex items-end justify-between gap-[40px] no-underline"
             >
-              {next.cover.image && (
-                <img
-                  alt=""
-                  src={next.cover.image}
-                  decoding="async"
-                  className="block size-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
-                />
-              )}
-            </div>
-          </Link>
-        </section>
+              <div className="flex-1">
+                <h2 className="text-[72px] font-medium leading-[1] tracking-[-0.02em] text-white">
+                  {next.title}
+                </h2>
+                <p className="mt-[24px] max-w-[620px] text-[18px] font-light leading-[1.5] text-white/60">
+                  {next.shortDescription}
+                </p>
+              </div>
+              <div
+                className={`relative h-[260px] w-[420px] flex-none overflow-hidden rounded-[10px] ${next.cover.bg ?? 'bg-white/5'}`}
+              >
+                {next.cover.image && (
+                  <img
+                    alt=""
+                    src={next.cover.image}
+                    decoding="async"
+                    className="block size-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                  />
+                )}
+              </div>
+            </Link>
+          </section>
+        )}
 
         {/* Footer in flow */}
         <div className="relative mt-[180px] h-[383px]">
@@ -156,12 +189,18 @@ function MediaBlock({ block }: { block: ProjectMediaBlock }) {
               <div className={`block w-full ${block.aspect ?? 'aspect-[16/9]'}`} aria-label={block.alt} />
             )}
           </div>
-          <div className="mt-[40px] grid grid-cols-12 gap-[40px]">
-            <Label className="col-span-3">{block.label}</Label>
-            <Rationale className="col-span-7 col-start-5">
-              {block.rationale}
-            </Rationale>
-          </div>
+          {(block.label || block.rationale) && (
+            <div className="mt-[40px] grid grid-cols-12 gap-[40px]">
+              {block.label && (
+                <Label className="col-span-3">{block.label}</Label>
+              )}
+              {block.rationale && (
+                <Rationale className="col-span-7 col-start-5">
+                  {block.rationale}
+                </Rationale>
+              )}
+            </div>
+          )}
         </section>
       )
 
